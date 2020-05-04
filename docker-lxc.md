@@ -1,5 +1,9 @@
 # Instructions for getting Docker + Debian 10 + LXC container working
 
+Tested on Proxmox 6.1
+
+Note: While I'm able to get this to work, it seems from [numerous](https://forum.proxmox.com/threads/best-option-to-run-docker-containers.60257/) forum posts that the suggestion is to use a VM instead. Fun exploration, leaving this up for reference, but switching my docker needs to a VM instead.
+
 ## Enabling Docker in LXC
 
 After the LXC container is created:
