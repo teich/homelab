@@ -2,10 +2,12 @@
 
 **Make sure to leave IPV6 to static (blank) to prevent long inbound network hangs**
 
+There are a few things that I want 100% of the time, and some of the lower steps depend on:
+
 *In the LXC container*
 ```
 apt update && apt upgrade
-apt install openssh-server curl sudo
+apt install openssh-server curl sudo gnupg
 ```
 
 ## Tailscale
