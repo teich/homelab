@@ -5,8 +5,6 @@
 ```
 apt update && apt upgrade
 apt install openssh-server curl sudo
-systemctl start sshd
-systemctl status ssh
 ```
 
 ## Tailscale
