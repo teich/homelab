@@ -2,6 +2,7 @@
 
 **Make sure to leave IPV6 to static (blank) to prevent long inbound network hangs**
 
+*In the LXC container*
 ```
 apt update && apt upgrade
 apt install openssh-server curl sudo
@@ -12,6 +13,7 @@ apt install openssh-server curl sudo
 Per [this post](https://linux-tips.com/t/setup-openvpn-server-in-proxmox-lxc-container/695), we need to
 hck the poor LXC container to enable `/dev/net/tun` by appending to /etc/pve/local/lcx/<ID>.conf:
 
+*In Proxmox host OS*
 ```
 lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
 ```
@@ -22,6 +24,7 @@ pct stop <ID>
 pct start <ID>
 ```
 
+*Back in LXC container*
 Then install [tailscale](https://tailscale.com/kb/1041/install-debian-buster)
 
 ```
@@ -35,6 +38,7 @@ sudo tailscale up
 
 ## Enabling Docker in LXC
 
+*In Proxmox host OS*
 In `/etc/pve/local/lxc/<ID>.conf` append
 
 ```
