@@ -1,6 +1,6 @@
-## Generic Creating LXC tips
-* Console never responded
-* Ran `pct enter <ID>` to get into the LXC, then 
+# Generic LCX setup tips
+
+**Make sure to leave IPV6 to static (blank) to prevent long inbound network hangs**
 
 ```
 apt update && apt upgrade
@@ -9,22 +9,32 @@ systemctl start sshd
 systemctl status ssh
 ```
 
-Hack the poor LXC container to enable `/dev/net/tun` by appending to /etc/pve/local/lcx/<ID>.conf:
+## Tailscale
+
+Per [this post](https://linux-tips.com/t/setup-openvpn-server-in-proxmox-lxc-container/695), we need to
+hck the poor LXC container to enable `/dev/net/tun` by appending to /etc/pve/local/lcx/<ID>.conf:
 
 ```
-lxc.cgroup.devices.allow = c 10:200 rwm
-lxc.hook.autodev = sh -c "modprobe tun; cd ${LXC_ROOTFS_MOUNT}/dev; mkdir net; mknod net/tun c 10 200; chmod 0666 net/tun"
+lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
 ```
+
+Then restart your container with 
+```
+pct stop <ID>
+pct start <ID>
+```
+
 Then install [tailscale](https://tailscale.com/kb/1041/install-debian-buster)
 
 ```
 curl https://pkgs.tailscale.com/stable/debian/buster.gpg | sudo apt-key add -
 curl https://pkgs.tailscale.com/stable/debian/buster.list | sudo tee /etc/apt/sources.list.d/tailscale.list
-
 sudo apt-get update
 sudo apt-get install tailscale
+sudo tailscale up
 
 ```
+
 ## Enabling Docker in LXC
 
 In `/etc/pve/local/lxc/<ID>.conf` append
