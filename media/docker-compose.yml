@@ -55,7 +55,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /mnt/docker/radarr:/config
-      - /mnt/Media/Movies:/movies
+      - media_nfs:/movies
       - /mnt/Media/Downloading:/downloads
     ports:
       - 7878:7878
