@@ -1,0 +1,70 @@
+version: '3'
+services:
+
+  plex:
+    container_name: plex
+    image: plexinc/pms-docker
+    restart: unless-stopped
+    environment:
+      - TZ=<timezone>
+      - PLEX_CLAIM=<claimToken>
+    network_mode: host
+    volumes:
+      - <path/to/plex/database>:/config
+      - <path/to/transcode/temp>:/transcode
+      - <path/to/media>:/data
+
+  sonarr:
+    container_name: sonarr
+    image: linuxserver/sonarr:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1026
+      - PGID=100
+      - TZ=America/Los_Angeles
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /mnt/docker/sonarr:/config
+      - /mnt/Media/TV:/tv
+      - /mnt/Media/Downloading:/downloads
+    ports:
+      - 8989:8989
+
+  nzbget:
+    container_name: nzbget
+    image: linuxserver/nzbget
+    restart: unless-stopped
+    environment:
+      - PUID=1026
+      - PGID=100
+      - TZ=America/Los_Angeles
+    volumes:
+      - /mnt/docker/nzbget:/config
+      - /mnt/Media/Downloading:/downloads
+    ports:
+      - 6789:6789
+
+  radarr:
+    container_name: radarr
+    image: linuxserver/radarr
+    restart: unless-stopped
+    environment:
+      - PUID=1026
+      - PGID=100
+      - TZ=America/Los_Angeles
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /mnt/docker/radarr:/config
+      - /mnt/Media/Movies:/movies
+      - /mnt/Media/Downloading:/downloads
+    ports:
+      - 7878:7878
+
+
+volumes:
+  media_nfs:
+    driver: local
+    driver_opts: 
+      type: nfs
+      o: addr=192.168.1.10,rw
+      device: ":/volume1/Media"
