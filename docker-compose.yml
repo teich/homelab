@@ -29,6 +29,19 @@ services:
     ports:
       - 8181:8181
 
+  organizr:
+    container_name: organizr
+    image: organizrtools/organizr-v2
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+    volumes:
+      - /srv/docker/organizr:/config
+    ports:
+      - 80:80
+
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr:latest
