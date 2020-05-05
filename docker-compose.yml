@@ -6,8 +6,9 @@ services:
     image: plexinc/pms-docker
     restart: unless-stopped
     environment:
-      - TZ=<timezone>
-      - PLEX_CLAIM=<claimToken>
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
     network_mode: host
     volumes:
       - /srv/docker/plex:/config
@@ -19,8 +20,8 @@ services:
     image: linuxserver/sonarr:latest
     restart: unless-stopped
     environment:
-      - PUID=1026
-      - PGID=100
+      - PUID=1000
+      - PGID=1000
       - TZ=America/Los_Angeles
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -35,8 +36,8 @@ services:
     image: linuxserver/nzbget
     restart: unless-stopped
     environment:
-      - PUID=1026
-      - PGID=100
+      - PUID=1000
+      - PGID=1000
       - TZ=America/Los_Angeles
     volumes:
       - /srv/docker/nzbget:/config
@@ -49,8 +50,8 @@ services:
     image: linuxserver/radarr
     restart: unless-stopped
     environment:
-      - PUID=1026
-      - PGID=100
+      - PUID=1000
+      - PGID=1000
       - TZ=America/Los_Angeles
     volumes:
       - /etc/localtime:/etc/localtime:ro
