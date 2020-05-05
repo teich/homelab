@@ -15,6 +15,20 @@ services:
       - /tmp/transcode:/transcode
       - /mnt/media:/data
 
+  tautulli:
+    container_name: tautulli
+    image: tautulli/tautulli
+    restart: unless-stopped
+     environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+    volumes:
+      - /srv/docker/tautulli:/config
+      - /srv/docker/plex/Library/Application Support/Plex Media Server/Logs:/plex_logs:ro
+    ports:
+      - 8181:8181
+
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr:latest
