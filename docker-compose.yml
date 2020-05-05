@@ -25,8 +25,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /srv/docker/sonarr:/config
-      - /mnt/Media/TV:/tv
-      - /mnt/Media/Downloading:/downloads
+      - /mnt/media/TV:/tv
+      - /mnt/media/Downloading:/downloads
     ports:
       - 8989:8989
 
@@ -40,7 +40,7 @@ services:
       - TZ=America/Los_Angeles
     volumes:
       - /srv/docker/nzbget:/config
-      - /mnt/Media/Downloading:/downloads
+      - /mnt/media/Downloading:/downloads
     ports:
       - 6789:6789
 
@@ -56,6 +56,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /srv/docker/radarr:/config
       - /mnt/media/Movies:/Movies
-      - /mnt/Media/Downloading:/downloads
+      - /mnt/media/Downloading:/downloads
     ports:
       - 7878:7878
