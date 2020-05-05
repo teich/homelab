@@ -19,7 +19,7 @@ services:
     container_name: tautulli
     image: tautulli/tautulli
     restart: unless-stopped
-     environment:
+    environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/Los_Angeles
