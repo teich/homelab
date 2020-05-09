@@ -52,7 +52,7 @@ services:
     volumes:
       - /srv/docker/organizr:/config
     ports:
-      - 80:80
+      - 8321:80
 
   sonarr:
     container_name: sonarr
