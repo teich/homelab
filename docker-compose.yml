@@ -1,45 +1,41 @@
-version: '3'
-services:
 
-  nginx: 
+  nginx:
+    container_name: reverse
     image: nginx:latest
-    container_name: production_nginx
     volumes:
-      - /srv/docker/homelab/media-nginx.conf:/etc/nginx/nginx.conf
-      - /srv/docker/nginx/error.log:/etc/nginx/error_log.log
-      - /srv/docker/nginx/cache/:/etc/nginx/cache
-      - /mnt/SSL/certs/\*.t.teich.network/:/etc/letsencrypt/
+      - /srv/docker/nginx/:/etc/nginx/
+      - /mnt/SSL/certs/*.t.teich.network/:/etc/letsencrypt/
     ports:
       - 80:80
       - 443:443
 
-  plex:
-    container_name: plex
-    image: plexinc/pms-docker
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Los_Angeles
-    network_mode: host
-    volumes:
-      - /srv/docker/plex:/config
-      - /tmp/transcode:/transcode
-      - /mnt/media:/data
+#  plex:
+#    container_name: plex
+#    image: plexinc/pms-docker
+#    restart: unless-stopped
+#    environment:
+#      - PUID=1000
+#      - PGID=1000
+#      - TZ=America/Los_Angeles
+#    network_mode: host
+#    volumes:
+#      - /srv/docker/plex:/config
+#      - /tmp/transcode:/transcode
+#      - /mnt/media:/data
 
-  tautulli:
-    container_name: tautulli
-    image: tautulli/tautulli
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Los_Angeles
-    volumes:
-      - /srv/docker/tautulli:/config
-      - /srv/docker/plex/Library/Application Support/Plex Media Server/Logs:/plex_logs:ro
-    ports:
-      - 8181:8181
+#  tautulli:
+#    container_name: tautulli
+#    image: tautulli/tautulli
+#    restart: unless-stopped
+#    environment:
+#      - PUID=1000
+#      - PGID=1000
+#      - TZ=America/Los_Angeles
+#    volumes:
+#      - /srv/docker/tautulli:/config
+#      - /srv/docker/plex/Library/Application Support/Plex Media Server/Logs:/plex_logs:ro
+#    ports:
+#      - 8181:8181
 
   organizr:
     container_name: organizr
@@ -95,7 +91,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /srv/docker/radarr:/config
-      - /mnt/media/Movies:/Movies
+      - /mnt/media/Movies:/movies
       - /mnt/media/Downloading:/downloads
     ports:
       - 7878:7878
