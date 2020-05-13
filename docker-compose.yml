@@ -1,54 +1,37 @@
+version: '3.5'
+services:
 
-  nginx:
-    container_name: reverse
-    image: nginx:latest
-    volumes:
-      - /srv/docker/nginx/:/etc/nginx/
-      - /mnt/SSL/certs/*.t.teich.network/:/etc/letsencrypt/
-    ports:
-      - 80:80
-      - 443:443
-
-#  plex:
-#    container_name: plex
-#    image: plexinc/pms-docker
-#    restart: unless-stopped
-#    environment:
-#      - PUID=1000
-#      - PGID=1000
-#      - TZ=America/Los_Angeles
-#    network_mode: host
-#    volumes:
-#      - /srv/docker/plex:/config
-#      - /tmp/transcode:/transcode
-#      - /mnt/media:/data
-
-#  tautulli:
-#    container_name: tautulli
-#    image: tautulli/tautulli
-#    restart: unless-stopped
-#    environment:
-#      - PUID=1000
-#      - PGID=1000
-#      - TZ=America/Los_Angeles
-#    volumes:
-#      - /srv/docker/tautulli:/config
-#      - /srv/docker/plex/Library/Application Support/Plex Media Server/Logs:/plex_logs:ro
-#    ports:
-#      - 8181:8181
-
-  organizr:
-    container_name: organizr
-    image: organizrtools/organizr-v2
+  traefik:
+    image: traefik:v2.2
+    container_name: traefik
     restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Los_Angeles
-    volumes:
-      - /srv/docker/organizr:/config
+    # Enables the web UI and tells Traefik to listen to docker
+    command: 
+      - "--api.insecure=true" 
+      - "--providers.docker"
+
     ports:
-      - 8321:80
+      # The HTTP port
+      - "80:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+
+#  organizr:
+#    container_name: organizr
+#    image: organizrtools/organizr-v2
+#    restart: unless-stopped
+#    environment:
+#      - PUID=1000
+#      - PGID=1000
+#      - TZ=America/Los_Angeles
+#    volumes:
+#      - /srv/docker/organizr:/config
+#    labels:
+#      - traefik.frontend.rule=Host:home.t.teich.network
+#      - traefik.docker.network=internal
 
   sonarr:
     container_name: sonarr
@@ -63,8 +46,9 @@
       - /srv/docker/sonarr:/config
       - /mnt/media/TV:/tv
       - /mnt/media/Downloading:/downloads
-    ports:
-      - 8989:8989
+    labels:
+      - traefik.http.routers.sonarr.rule=Host(`sonarr.t.teich.network`)
+
 
   nzbget:
     container_name: nzbget
@@ -77,8 +61,8 @@
     volumes:
       - /srv/docker/nzbget:/config
       - /mnt/media/Downloading:/downloads
-    ports:
-      - 6789:6789
+    labels:
+      - traefik.http.routers.nzbget.rule=Host(`nzbget.t.teich.network`)
 
   radarr:
     container_name: radarr
@@ -93,5 +77,5 @@
       - /srv/docker/radarr:/config
       - /mnt/media/Movies:/movies
       - /mnt/media/Downloading:/downloads
-    ports:
-      - 7878:7878
+    labels:
+      - traefik.http.routers.radarr.rule=Host(`radarr.t.teich.network`)
