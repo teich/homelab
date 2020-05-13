@@ -1,0 +1,12 @@
+[http.routers]
+  [http.routers.hassio-rtr]
+      entryPoints = ["http"]
+      rule = "Host(`ha.t.teich.network`)"
+      service = "hassio-svc"
+
+[http.services]
+  [http.services.hassio-svc]
+    [http.services.hassio-svc.loadBalancer]
+      passHostHeader = true
+      [[http.services.hassio-svc.loadBalancer.servers]]
+        url = "http://192.168.1.35:8123" 

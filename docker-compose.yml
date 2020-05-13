@@ -9,29 +9,17 @@ services:
     command: 
       - "--api.insecure=true" 
       - "--providers.docker"
-
+      - "--providers.file.directory=/rules"
+      - "--providers.file.watch=true"
     ports:
       # The HTTP port
       - "80:80"
       # The Web UI (enabled by --api.insecure=true)
       - "8080:8080"
     volumes:
-      # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
-
-#  organizr:
-#    container_name: organizr
-#    image: organizrtools/organizr-v2
-#    restart: unless-stopped
-#    environment:
-#      - PUID=1000
-#      - PGID=1000
-#      - TZ=America/Los_Angeles
-#    volumes:
-#      - /srv/docker/organizr:/config
-#    labels:
-#      - traefik.frontend.rule=Host:home.t.teich.network
-#      - traefik.docker.network=internal
+      - /srv/docker/homelab/traefik-rules:/rules
+      - /srv/docker/traefik/acme.json:/acme.json
 
   sonarr:
     container_name: sonarr
