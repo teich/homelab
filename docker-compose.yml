@@ -1,58 +1,32 @@
-version: '3'
+version: '3.5'
 services:
 
-  nginx: 
-    image: nginx:latest
-    container_name: production_nginx
-    volumes:
-      - /srv/docker/homelab/media-nginx.conf:/etc/nginx/nginx.conf
-      - /srv/docker/nginx/error.log:/etc/nginx/error_log.log
-      - /srv/docker/nginx/cache/:/etc/nginx/cache
-      - /mnt/SSL/certs/\*.t.teich.network/:/etc/letsencrypt/
-    ports:
-      - 80:80
-      - 443:443
-
-  plex:
-    container_name: plex
-    image: plexinc/pms-docker
+  traefik:
+    image: traefik:v2.2
+    container_name: traefik
     restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Los_Angeles
-    network_mode: host
-    volumes:
-      - /srv/docker/plex:/config
-      - /tmp/transcode:/transcode
-      - /mnt/media:/data
-
-  tautulli:
-    container_name: tautulli
-    image: tautulli/tautulli
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Los_Angeles
-    volumes:
-      - /srv/docker/tautulli:/config
-      - /srv/docker/plex/Library/Application Support/Plex Media Server/Logs:/plex_logs:ro
+    # Enables the web UI and tells Traefik to listen to docker
+    command: 
+      - "--api.insecure=true" 
+      - "--providers.docker"
+      - "--providers.file.directory=/rules"
+      - "--providers.file.watch=true"
+      - --certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory # LetsEncrypt Staging Server - uncomment when testing
+      - --certificatesResolvers.dns-cloudflare.acme.email=oren@teich.net
+      - --certificatesResolvers.dns-cloudflare.acme.storage=/acme.json
+      - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.provider=dnsimple
     ports:
-      - 8181:8181
-
-  organizr:
-    container_name: organizr
-    image: organizrtools/organizr-v2
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Los_Angeles
+      # The HTTP port
+      - "80:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
     volumes:
-      - /srv/docker/organizr:/config
-    ports:
-      - 8321:80
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /srv/docker/homelab/traefik-rules:/rules
+      - /srv/docker/traefik/acme.json:/acme.json
+    environment:
+      - DNSIMPLE_OAUTH_TOKEN=$DNSIMPLE_OAUTH_TOKEN
+      - DNSIMPLE_BASE_URL=$DNSIMPLE_BASE_URL
 
   sonarr:
     container_name: sonarr
@@ -67,8 +41,9 @@ services:
       - /srv/docker/sonarr:/config
       - /mnt/media/TV:/tv
       - /mnt/media/Downloading:/downloads
-    ports:
-      - 8989:8989
+    labels:
+      - traefik.http.routers.sonarr.rule=Host(`sonarr.t.teich.network`)
+
 
   nzbget:
     container_name: nzbget
@@ -81,8 +56,8 @@ services:
     volumes:
       - /srv/docker/nzbget:/config
       - /mnt/media/Downloading:/downloads
-    ports:
-      - 6789:6789
+    labels:
+      - traefik.http.routers.nzbget.rule=Host(`nzbget.t.teich.network`)
 
   radarr:
     container_name: radarr
@@ -95,7 +70,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /srv/docker/radarr:/config
-      - /mnt/media/Movies:/Movies
+      - /mnt/media/Movies:/movies
       - /mnt/media/Downloading:/downloads
-    ports:
-      - 7878:7878
+    labels:
+      - traefik.http.routers.radarr.rule=Host(`radarr.t.teich.network`)
