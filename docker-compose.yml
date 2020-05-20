@@ -5,15 +5,38 @@ services:
     image: traefik:v2.2
     container_name: traefik
     restart: unless-stopped
+    command:
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --providers.docker=true
+      - --providers.file.directory=/etc/traefik/rules
+      - --api.insecure 
+      - --log=true
+      - --log.level=WARN # (Default: error) DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+      - --providers.docker.defaultrule=Host(`{{ index .Labels "com.docker.compose.service" }}.t.teich.network`)
+      - --certificatesResolvers.le.acme.dnsChallenge.provider=dnsimple
+      - --certificatesresolvers.le.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      - --certificatesresolvers.le.acme.email=oren@teich.net
+      - --certificatesresolvers.le.acme.storage=/etc/traefik/acme.json
+      - --entrypoints.websecure.http.tls.certresolver=le
     ports:
       - "80:80"
+      - "443:443"
       - "8080:8080"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - /srv/docker/homelab/traefik/:/etc/traefik/
     environment:
       - DNSIMPLE_OAUTH_TOKEN=$DNSIMPLE_OAUTH_TOKEN
       - DNSIMPLE_BASE_URL=$DNSIMPLE_BASE_URL
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`traefik.mydomain.com`)"
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls.certresolver=le"
+      - "traefik.http.routers.api.tls.domains[0].main=t.teich.network"
+      - "traefik.http.routers.api.tls.domains[0].sans=*.t.teich.network"
 
   sonarr:
     container_name: sonarr
@@ -29,8 +52,10 @@ services:
       - /mnt/media/TV:/tv
       - /mnt/media/Downloading:/downloads
     labels:
-      - traefik.http.routers.sonarr.rule=Host(`sonarr.t.teich.network`)
-
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.entrypoints=web, websecure"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.t.teich.network`)"
+      - "traefik.http.routers.sonarr.tls.certresolver=le"
 
   nzbget:
     container_name: nzbget
@@ -44,7 +69,11 @@ services:
       - /srv/docker/nzbget:/config
       - /mnt/media/Downloading:/downloads
     labels:
-      - traefik.http.routers.nzbget.rule=Host(`nzbget.t.teich.network`)
+      - "traefik.enable=true"
+      - "traefik.http.routers.nzbget.entrypoints=web, websecure"
+      - "traefik.http.routers.nzbget.rule=Host(`nzbget.t.teich.network`)"
+      - "traefik.http.routers.nzbget.tls.certresolver=le"
+
 
   radarr:
     container_name: radarr
@@ -61,3 +90,5 @@ services:
       - /mnt/media/Downloading:/downloads
     labels:
       - traefik.http.routers.radarr.rule=Host(`radarr.t.teich.network`)
+      - "traefik.http.routers.radarr.entrypoints=web, websecure"
+      - "traefik.http.routers.radarr.tls.certresolver=le"

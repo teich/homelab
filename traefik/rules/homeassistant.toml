@@ -1,8 +1,10 @@
 [http.routers]
   [http.routers.hassio-rtr]
-      entryPoints = ["http"]
+      entryPoints = ["web"]
       rule = "Host(`ha.t.teich.network`)"
       service = "hassio-svc"
+      [http.routers.hassio-rtr.tls]
+        certresolver = "le" 
 
 [http.services]
   [http.services.hassio-svc]
