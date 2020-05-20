@@ -1,0 +1,43 @@
+[global]
+  checkNewVersion = true
+  sendAnonymousUsage = true
+
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+
+  [entryPoints.websecure]
+    address = ":443"
+
+[log]
+
+[api]
+  insecure = true
+
+[providers]
+
+  [providers.docker]
+  [providers.file]
+    directory = "/etc/traefik/rules"
+    watch = true
+
+
+
+[certificatesResolvers.myresolver.acme]
+  email = "oren@teich.net"
+  storage = "acme.json"
+  [certificatesResolvers.myresolver.acme.httpChallenge]
+    # used during the challenge
+    entryPoint = "https"
+
+[acme]
+email = "oren@teich.net"
+storage = "acme.json"
+caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+entryPoint = "https"
+  [acme.dnsChallenge]
+  provider = "dnsimple" 
+  delayBeforeCheck = 0
+
+[[acme.domains]]
+  main = "*.t.teich.network"

@@ -5,25 +5,12 @@ services:
     image: traefik:v2.2
     container_name: traefik
     restart: unless-stopped
-    # Enables the web UI and tells Traefik to listen to docker
-    command: 
-      - "--api.insecure=true" 
-      - "--providers.docker"
-      - "--providers.file.directory=/rules"
-      - "--providers.file.watch=true"
-      - --certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory # LetsEncrypt Staging Server - uncomment when testing
-      - --certificatesResolvers.dns-cloudflare.acme.email=oren@teich.net
-      - --certificatesResolvers.dns-cloudflare.acme.storage=/acme.json
-      - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.provider=dnsimple
     ports:
-      # The HTTP port
       - "80:80"
-      # The Web UI (enabled by --api.insecure=true)
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /srv/docker/homelab/traefik-rules:/rules
-      - /srv/docker/traefik/acme.json:/acme.json
+      - /srv/docker/homelab/traefik/:/etc/traefik/
     environment:
       - DNSIMPLE_OAUTH_TOKEN=$DNSIMPLE_OAUTH_TOKEN
       - DNSIMPLE_BASE_URL=$DNSIMPLE_BASE_URL
