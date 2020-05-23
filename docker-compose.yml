@@ -50,3 +50,17 @@ services:
       - /srv/docker/radarr:/config
       - /mnt/media/Movies:/movies
       - /mnt/media/Downloading:/downloads
+
+  code-server:
+    container_name: code-server
+    image: linuxserver/code-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+      - SUDO_PASSWORD=password #optional
+    volumes:
+      - /srv/docker/code-server/config:/config
+    ports:
+      - 8443:8443
+    restart: unless-stopped
