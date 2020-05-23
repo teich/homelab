@@ -61,6 +61,18 @@ services:
       - SUDO_PASSWORD=password #optional
     volumes:
       - /srv/docker/code-server/config:/config
+    restart: unless-stopped
+
+  heimdall:
+    image: linuxserver/heimdall
+    container_name: heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+    volumes:
+      - /srv/docker/heimdall/:/config
     ports:
-      - 8443:8443
+      - 81:80
+      - 444:443
     restart: unless-stopped
