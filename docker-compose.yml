@@ -4,6 +4,7 @@ services:
   nginx:
     container_name: nginx
     image: nginx:latest
+    restart: unless-stopped
     volumes:
       - /srv/docker/homelab/nginx/:/etc/nginx
       - /mnt/SSL/certs/*.t.teich.network/:/etc/letsencrypt/
