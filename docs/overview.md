@@ -1,4 +1,5 @@
 ### media.t.teich.network
+
 Lab: **SF**
 Type: **VM**
 Tailscale: **Yes**
@@ -7,6 +8,7 @@ Docker root directory: `/srv/docker`
 Docker compose: `/srv/docker/homelab/docker-compose.yml`
 
 ### mineos.t.teich.network
+
 Lab: **SF**
 Type: **LXC**
 Tailscale: **Yes**
@@ -19,6 +21,7 @@ git pull
 ```
 
 ### pms (no DNS)
+
 Lab: **SF**
 Type: **LXC**
 Tailscale: **No**
@@ -26,12 +29,14 @@ Needs SSL: **No**
 Notes: plex installed via apt, update with normal `apt update`
 
 ### ha.t.teich.network
+
 Lab: **SF**
 Type: **VM**
 Tailscale: **Yes**
 Needs SSL: **Yes**
 
 ### unifi.t.teich.network	
+
 Lab: **BV**
 Type: **LXC**
 Tailscale: **Yes**
@@ -41,6 +46,7 @@ Login: root/SSH key
 Notes: Unifi installed via apt, update with normal `apt update`
 
 ### mineos-bv.b.teich.network
+
 Lab: **BV**
 Type: **LXC**
 Tailscale: **No**
@@ -54,6 +60,7 @@ git pull
 ```
 
 ### unms.t.teich.network
+
 Lab: **BV**
 Type: **VM**
 Tailscale: **Yes**
@@ -62,6 +69,7 @@ OS: Ubuntu 20
 Updates: Via UNMS web UI
 
 ### tick.t.teich.network
+
 Lab: **BV**
 Type: **VM**
 Tailscale: **Yes**
