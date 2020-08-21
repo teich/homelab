@@ -1,6 +1,6 @@
 ## Controller config
 
-* Channel selection. 
+* Channel selection. Write some words here. It's annoying.
 * IOT devices seem to often have terrible issues. Create a IOT device only network. 
     * I don't bother VLAN/isolating, but you do you.
     * I made the IOT SSID 2ghz only. Idea is pollute the 5ghz band less, no idea if it's helpful.
