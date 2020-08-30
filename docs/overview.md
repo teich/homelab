@@ -1,11 +1,11 @@
 ### media.t.teich.network
 
-Lab: **SF**
-Type: **VM**
-Tailscale: **Yes**
-Needs SSL: **Yes**
-Docker root directory: `/srv/docker` 
-Docker compose: `/srv/docker/homelab/docker-compose.yml`
+Lab: **SF**  
+Type: **VM**  
+Tailscale: **Yes**  
+Needs SSL: **Yes**  
+Docker root directory: `/srv/docker`   
+Docker compose: `/srv/docker/homelab/docker-compose.yml`  
 
 ### mineos.t.teich.network
 
